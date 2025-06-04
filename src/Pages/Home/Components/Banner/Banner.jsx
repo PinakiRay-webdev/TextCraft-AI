@@ -6,7 +6,7 @@ import Detail from "./Component/Detail/Detail";
 
 const Banner = () => {
   return (
-    <div className="h-[100vh] w-full rounded-4xl bg-radial from-[#5a189a] from-10% to-[#240046]">
+    <div className="h-[100vh] w-full rounded-4xl bg-radial from-[#5a189a] from-10% to-[#240046] mt-5">
       <section
         id="intro"
         className="w-[70%] mx-auto text-center text-white text-7xl font-bold leading-[5rem] h-fit py-18 relative"
