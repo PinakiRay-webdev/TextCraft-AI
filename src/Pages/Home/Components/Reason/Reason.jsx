@@ -20,8 +20,8 @@ const Reason = () => {
 
       <article className="w-[50%] flex flex-col items-end">
         {reasons.map((reason, id) => (
-          <div className="w-[80%] bg-white p-2 rounded-lg drop-shadow-xl mb-8">
-            <div key={id} className="">
+          <div key={id} className="w-[80%] bg-white p-2 rounded-lg drop-shadow-xl mb-8">
+            <div className="">
               <h4 className="font-semibold text-xl">
                 {reason.text}
               </h4>

@@ -10,8 +10,8 @@ const Navbar = () => {
       </h1>
 
       <div className="flex gap-9" >
-        {navItems.map((items) => (
-          <p className="font-semibold cursor-pointer">{items}</p>
+        {navItems.map((items , id) => (
+          <p key={id} className="font-semibold cursor-pointer">{items}</p>
         ))}
       </div>
 
