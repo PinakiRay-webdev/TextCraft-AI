@@ -51,7 +51,7 @@ const Summary = () => {
       <main>
         <section
           id="heading"
-          className="w-[60%] mx-auto text-center py-12 h-[18rem]"
+          className="w-[60%] mx-auto text-center py-12 h-[13rem]"
         >
           <h1 className="font-semibold text-5xl">
             Tired of Long Paragraphs? Let AI Instantly Summarize and Save You
@@ -106,9 +106,8 @@ const Summary = () => {
                   </p>
                 </header>
 
-                {/* Render HTML directly */}
                 <div
-                  className="mt-8 space-y-3 text-slate-800"
+                  className="mt-8 space-y-3 text-slate-800 h-[70vh] overflow-y-scroll"
                   dangerouslySetInnerHTML={{ __html: summaryText }}
                 />
               </article>
