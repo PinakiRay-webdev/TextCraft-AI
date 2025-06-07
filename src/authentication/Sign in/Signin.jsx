@@ -3,7 +3,10 @@ import { VscEyeClosed, VscEye } from "react-icons/vsc";
 import { useForm } from "react-hook-form";
 import google from "../../assets/google.svg";
 import { useState } from "react";
+import { GoogleAuthProvider , signInWithPopup } from "firebase/auth";
+import { firebaseAuth } from "../../firebase/firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 const Signin = () => {
   const {
     register,
@@ -18,6 +21,23 @@ const Signin = () => {
     setIsVisible(!isVisible);
   };
 
+  //signin with google
+  const provider = new GoogleAuthProvider()
+  const googleSignin = async () =>{
+    toast.loading('signing with google' , {theme : 'dark'})
+    await signInWithPopup(firebaseAuth , provider).then((result)=>{
+        const credentials = GoogleAuthProvider.credentialFromResult(result);
+        const token = credentials.accessToken;
+        const user  = result.user;
+        toast.dismiss();
+        toast.success('Authenticated✅' , {theme : 'dark'})
+    }).catch((error) =>{
+        toast.dismiss()
+        toast.error(error.message , {theme : 'dark'})
+    })
+  }
+
+  //signin with email and password
   const signin = async (data) => {
     toast.loading("singing you in a sec...", { theme: "dark" });
     try {
@@ -123,7 +143,7 @@ const Signin = () => {
             </button>
           </form>
           {/* social media authentication  */}
-          <div className="ring-1 cursor-pointer ring-black flex items-center justify-center gap-3 py-2 rounded-lg mt-4">
+          <div onClick={googleSignin} className="ring-1 cursor-pointer ring-black flex items-center justify-center gap-3 py-2 rounded-lg mt-4">
             <img className="w-7" src={google} alt="" />
             <p className="text-lg font-semibold">continue with google</p>
           </div>
