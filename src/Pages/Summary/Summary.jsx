@@ -13,11 +13,11 @@ const Summary = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset
+    reset,
   } = useForm();
 
   const [summaryText, setSummaryText] = useState("");
-  const [outputBoxVisibility, setOutputBoxVisibility] = useState('hidden')
+  const [outputBoxVisibility, setOutputBoxVisibility] = useState("hidden");
 
   const generateSummary = async (data) => {
     toast.loading("Generating...", { theme: "dark" });
@@ -27,7 +27,7 @@ const Summary = () => {
       toast.dismiss();
       toast.success("Generated!!!", { theme: "dark" });
       setSummaryText(res);
-      setOutputBoxVisibility('block')
+      setOutputBoxVisibility("block");
     } catch (err) {
       toast.dismiss();
       toast.error(err.message, { theme: "dark" });
@@ -39,11 +39,11 @@ const Summary = () => {
     toast.success("copied to clipboard!!", { theme: "dark" });
   };
 
-  const handleReset = () =>{
+  const handleReset = () => {
     setSummaryText("");
-    setOutputBoxVisibility('hidden')
-    reset()
-  } 
+    setOutputBoxVisibility("hidden");
+    reset();
+  };
 
   return (
     <div>
@@ -105,11 +105,25 @@ const Summary = () => {
                     <RxDownload />
                   </p>
                 </header>
-                <p className="whitespace-pre-line mt-8">{summaryText}</p>
+
+                {/* Render HTML directly */}
+                <div
+                  className="mt-8 space-y-3 text-slate-800"
+                  dangerouslySetInnerHTML={{ __html: summaryText }}
+                />
               </article>
-              <article id="action-buttons" className="w-[82%] mt-3 mx-3 flex gap-4 justify-center">
-              <button onClick={handleReset} className="bg-red-500 px-4 text-white rounded cursor-pointer" >Reset</button>
-              <button>Generate notes</button>
+
+              <article
+                id="action-buttons"
+                className="w-[82%] mt-3 mx-3 flex gap-4 justify-center"
+              >
+                <button
+                  onClick={handleReset}
+                  className="bg-red-500 px-4 text-white rounded cursor-pointer"
+                >
+                  Reset
+                </button>
+                <button>Generate notes</button>
               </article>
             </section>
           )}
