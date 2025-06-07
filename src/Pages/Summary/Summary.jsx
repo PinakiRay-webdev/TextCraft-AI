@@ -6,7 +6,9 @@ import Navbar from "../Home/Components/Navbar/Navbar";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createSummary } from "../../functions/Summary.mjs";
+import { createNotes } from "../../functions/Notes.mjs";
+import { createSummary } from "../../functions/Summary";
+import html2pdf from "html2pdf.js";
 
 const Summary = () => {
   const {
@@ -18,14 +20,15 @@ const Summary = () => {
 
   const [summaryText, setSummaryText] = useState("");
   const [outputBoxVisibility, setOutputBoxVisibility] = useState("hidden");
+  const [paragraph, setParagraph] = useState(""); //can be use later for multiple purposes
 
   const generateSummary = async (data) => {
-    toast.loading("Generating...", { theme: "dark" });
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    toast.loading("Summarizing...", { theme: "dark" });
     try {
+      setParagraph(data.paragraph); //set the entered paragraph
       const res = await createSummary(data.paragraph);
       toast.dismiss();
-      toast.success("Generated!!!", { theme: "dark" });
+      toast.success("Summarized!!!", { theme: "dark" });
       setSummaryText(res);
       setOutputBoxVisibility("block");
     } catch (err) {
@@ -35,14 +38,47 @@ const Summary = () => {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(summaryText);
+    const texts = document.createElement("div");
+    texts.innerHTML = summaryText;
+    const plainText = texts.innerText;
+    navigator.clipboard.writeText(plainText);
     toast.success("copied to clipboard!!", { theme: "dark" });
   };
+
+  const generateNotes = async () =>{
+    toast.loading('Generating notes...' , {theme : 'dark'})
+    try {
+          const res = await createNotes(paragraph);
+    toast.dismiss();
+    toast.success('Notes generated!!!', {theme : 'dark'})
+    setSummaryText(res)
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error.message , {theme : 'dark'})
+    }
+  }
 
   const handleReset = () => {
     setSummaryText("");
     setOutputBoxVisibility("hidden");
     reset();
+  };
+
+  const downloadPdf = () => {
+    if (!summaryText.trim()) return;
+
+    const element = document.createElement("div");
+    element.innerHTML = summaryText;
+
+    const opt = {
+      margin: 0.5,
+      filename: "summary.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    html2pdf().set(opt).from(element).save();
   };
 
   return (
@@ -75,14 +111,14 @@ const Summary = () => {
                     },
                   })}
                   placeholder="Paste your paragraph here"
-                  className="w-full outline-none px-2 h-auto"
+                  className="w-full outline-none px-2"
                 />
               </fieldset>
               <button
                 type="submit"
                 className="bg-purple-800 px-6 py-1 mt-4 rounded text-white cursor-pointer"
               >
-                Generate
+                Summarize
               </button>
             </form>
           </article>
@@ -101,13 +137,17 @@ const Summary = () => {
                   >
                     <IoCopy />
                   </p>
-                  <p className="text-slate-600 cursor-pointer" title="Download">
+                  <p
+                    onClick={downloadPdf}
+                    className="text-slate-600 cursor-pointer"
+                    title="Download"
+                  >
                     <RxDownload />
                   </p>
                 </header>
 
                 <div
-                  className="mt-8 space-y-3 text-slate-800 h-[70vh] overflow-y-scroll"
+                  className="mt-8 space-y-3 text-slate-800 max-h-[70vh] overflow-y-auto"
                   dangerouslySetInnerHTML={{ __html: summaryText }}
                 />
               </article>
@@ -118,11 +158,13 @@ const Summary = () => {
               >
                 <button
                   onClick={handleReset}
-                  className="bg-red-500 px-4 text-white rounded cursor-pointer"
+                  className="bg-red-500 px-4 py-1 text-white rounded cursor-pointer"
                 >
                   Reset
                 </button>
-                <button>Generate notes</button>
+                <button onClick={generateNotes} className="bg-linear-65 from-purple-500 to-pink-500 px-4 py-1 rounded text-white cursor-pointer">
+                  Generate notes
+                </button>
               </article>
             </section>
           )}
