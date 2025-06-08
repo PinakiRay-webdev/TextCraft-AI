@@ -7,7 +7,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { firebaseAuth } from "../../firebase/firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const Signin = () => {
+const Signup = () => {
   const {
     register,
     handleSubmit,
@@ -29,13 +29,10 @@ const Signin = () => {
       .then((result) => {
         const credentials = GoogleAuthProvider.credentialFromResult(result);
         const user = result.user;
-        localStorage.setItem(
-          "userCredentials",
-          JSON.stringify({
-            userName: user.displayName,
-            userEmail: user.email,
-          })
-        );
+        localStorage.setItem('userCredentials' , JSON.stringify({
+            userName : user.displayName,
+            userEmail: user.email
+        }))
         toast.dismiss();
         toast.success("Authenticated✅", { theme: "dark" });
       })
@@ -45,8 +42,8 @@ const Signin = () => {
       });
   };
 
-  //signin with email and password
-  const signin = async (data) => {
+  //signup with email and password
+  const signup = async (data) => {
     toast.loading("singing you in a sec...", { theme: "dark" });
     try {
       await new Promise((resolve) => {
@@ -74,12 +71,12 @@ const Signin = () => {
         />
       </div>
       <div id="signin-form" className="flex-1 flex items-center">
-        <article className="min-w-[25rem] w-[40%] mx-auto">
+        <article className="min-w-[25rem] w-[50%] mx-auto">
           <header>
             <p>Back to webpage</p>
           </header>
           <div className="mt-8">
-            <h2 className="text-5xl font-semibold">Welcome!!</h2>
+            <h2 className="text-5xl font-semibold">Hi, There</h2>
             <p className="mt-2">
               <span className="font-semibold underline cursor-pointer">
                 Create a free account
@@ -87,10 +84,66 @@ const Signin = () => {
               or login to get started with Textcraft
             </p>
           </div>
-          {/* sign in form  */}
-          <form onSubmit={handleSubmit(signin)} className="mt-8">
+          {/* sign up form  */}
+          <form onSubmit={handleSubmit(signup)} className="mt-8">
+            {/* first and last name  */}
+            <div className="flex gap-2">
+              <fieldset
+                className={`border-2 px-3 py-1 rounded-lg w-full ${
+                  errors.firstname && "border-red-500"
+                }`}
+              >
+                <legend
+                  className={`px-2 font-semibold ${
+                    errors.firstname && "text-red-500"
+                  }`}
+                >
+                  {" "}
+                  {errors.firstname ? errors.firstname.message : "First name"}{" "}
+                </legend>
+                <input
+                  {...register("firstname", {
+                    required: {
+                      value: true,
+                      message: "This is required",
+                    },
+                  })}
+                  type="text"
+                  placeholder="Enter your email address"
+                  className={`outline-none w-full px-2 py-1`}
+                />
+              </fieldset>
+
+              {/* last name  */}
+              <fieldset
+                className={`border-2 px-3 py-1 rounded-lg w-full ${
+                  errors.lastname && "border-red-500"
+                }`}
+              >
+                <legend
+                  className={`px-2 font-semibold ${
+                    errors.lastname && "text-red-500"
+                  }`}
+                >
+                  {errors.lastname ? errors.lastname.message : "Last name"}
+                </legend>
+                <input
+                  {...register("lastname", {
+                    required: {
+                      value: true,
+                      message: "This is required",
+                    },
+                  })}
+                  type="text"
+                  placeholder="Enter your email address"
+                  className={`outline-none w-full px-2 py-1`}
+                />
+              </fieldset>
+            </div>
+
+            {/* email id  */}
             <fieldset
-              className={`border-2 px-3 py-1 rounded-lg ${
+              className={`border-2 px-3 py-1 rounded-lg mt-4 ${
                 errors.email && "border-red-500"
               }`}
             >
@@ -114,6 +167,7 @@ const Signin = () => {
                 className={`outline-none w-full px-2 py-1`}
               />
             </fieldset>
+            {/* password  */}
             <fieldset
               className={`border-2 px-3 py-1 rounded-lg mt-4 ${
                 errors.password && "border-red-500"
@@ -143,11 +197,8 @@ const Signin = () => {
                 </p>
               </div>
             </fieldset>
-            <p className="font-semibold text-sm mt-2 text-right underline cursor-pointer">
-              Forgot password?
-            </p>
             <button className="bg-black text-white w-full py-3 rounded-lg mt-6 cursor-pointer">
-              Sign in
+              Sign up
             </button>
           </form>
           {/* social media authentication  */}
@@ -165,4 +216,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Signup;
