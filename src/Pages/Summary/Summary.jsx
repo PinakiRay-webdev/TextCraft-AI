@@ -14,15 +14,21 @@ const Summary = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm();
+
+  const user = JSON.parse(localStorage.getItem("userCredentials"));
 
   const [summaryText, setSummaryText] = useState("");
   const [outputBoxVisibility, setOutputBoxVisibility] = useState("hidden");
   const [paragraph, setParagraph] = useState(""); //can be use later for multiple purposes
 
   const generateSummary = async (data) => {
+    if (!user) {
+      toast.error("Create an account first", { theme: "dark" });
+      return;
+    }
     toast.loading("Summarizing...", { theme: "dark" });
     try {
       setParagraph(data.paragraph); //set the entered paragraph
@@ -45,18 +51,18 @@ const Summary = () => {
     toast.success("copied to clipboard!!", { theme: "dark" });
   };
 
-  const generateNotes = async () =>{
-    toast.loading('Generating notes...' , {theme : 'dark'})
+  const generateNotes = async () => {
+    toast.loading("Generating notes...", { theme: "dark" });
     try {
-          const res = await createNotes(paragraph);
-    toast.dismiss();
-    toast.success('Notes generated!!!', {theme : 'dark'})
-    setSummaryText(res)
+      const res = await createNotes(paragraph);
+      toast.dismiss();
+      toast.success("Notes generated!!!", { theme: "dark" });
+      setSummaryText(res);
     } catch (error) {
       toast.dismiss();
-      toast.error(error.message , {theme : 'dark'})
+      toast.error(error.message, { theme: "dark" });
     }
-  }
+  };
 
   const handleReset = () => {
     setSummaryText("");
@@ -84,92 +90,97 @@ const Summary = () => {
   return (
     <div>
       <Navbar />
-      <main>
-        <section
-          id="heading"
-          className="w-[60%] mx-auto text-center py-12 h-[13rem]"
+<main>
+  <section
+    id="heading"
+    className="w-full max-w-3xl mx-auto text-center py-8 px-2 md:py-12 md:px-0"
+  >
+    <h1 className="font-semibold text-3xl md:text-5xl">
+      Tired of Long Paragraphs? Let AI Instantly Summarize and Save You
+      Time!
+    </h1>
+  </section>
+
+  <section className="w-full max-w-3xl mx-auto px-2 md:px-8 my-8">
+    <article id="input=form">
+      <form
+        onSubmit={handleSubmit(generateSummary)}
+        className="flex flex-col md:flex-row items-stretch md:items-start gap-4 md:gap-5"
+      >
+        <fieldset className={`border p-1 rounded w-full ${errors.paragraph ? "border-red-500" : ""}`}>
+          <legend className={`px-1 mx-1 font-semibold ${errors.paragraph ? "text-red-500" : ""}`}>
+            {errors.paragraph ? errors.paragraph.message : "Paragraph"}
+          </legend>
+          <textarea
+            {...register("paragraph", {
+              required: {
+                value: true,
+                message: "This field is required",
+              },
+            })}
+            placeholder="Paste your paragraph here"
+            className={`w-full min-h-[120px] outline-none px-2 py-2 resize-y ${errors.paragraph ? "border-red-500 text-red-500" : ""}`}
+          />
+        </fieldset>
+        <button
+          type="submit"
+          className="bg-purple-800 px-6 py-2 rounded text-white cursor-pointer w-full md:w-auto"
         >
-          <h1 className="font-semibold text-5xl">
-            Tired of Long Paragraphs? Let AI Instantly Summarize and Save You
-            Time!
-          </h1>
-        </section>
+          Summarize
+        </button>
+      </form>
+    </article>
 
-        <section className="w-[60%] mx-auto px-22 my-8">
-          <article id="input=form">
-            <form
-              onSubmit={handleSubmit(generateSummary)}
-              className="flex items-start gap-5"
+    {summaryText && (
+      <section>
+        <article
+          id="summary"
+          className={`${outputBoxVisibility} mt-8 w-full bg-slate-100 p-4 md:p-5 rounded-2xl`}
+        >
+          <header className="flex gap-4 justify-end">
+            <p
+              onClick={copyToClipboard}
+              className="text-slate-600 cursor-pointer"
+              title="Copy to clipboard"
             >
-              <fieldset className="border p-1 rounded w-full">
-                <legend className="px-1 mx-1 font-semibold">Paragraph</legend>
-                <textarea
-                  {...register("paragraph", {
-                    required: {
-                      value: true,
-                      message: "This field is required",
-                    },
-                  })}
-                  placeholder="Paste your paragraph here"
-                  className="w-full outline-none px-2"
-                />
-              </fieldset>
-              <button
-                type="submit"
-                className="bg-purple-800 px-6 py-1 mt-4 rounded text-white cursor-pointer"
-              >
-                Summarize
-              </button>
-            </form>
-          </article>
+              <IoCopy />
+            </p>
+            <p
+              onClick={downloadPdf}
+              className="text-slate-600 cursor-pointer"
+              title="Download"
+            >
+              <RxDownload />
+            </p>
+          </header>
 
-          {summaryText && (
-            <section>
-              <article
-                id="summary"
-                className={`${outputBoxVisibility} mt-8 w-[82%] bg-slate-100 p-5 rounded-2xl`}
-              >
-                <header className="flex gap-4 justify-end">
-                  <p
-                    onClick={copyToClipboard}
-                    className="text-slate-600 cursor-pointer"
-                    title="Copy to clipboard"
-                  >
-                    <IoCopy />
-                  </p>
-                  <p
-                    onClick={downloadPdf}
-                    className="text-slate-600 cursor-pointer"
-                    title="Download"
-                  >
-                    <RxDownload />
-                  </p>
-                </header>
+          <div
+            className="mt-8 space-y-3 text-slate-800 max-h-[70vh] overflow-y-auto"
+            dangerouslySetInnerHTML={{ __html: summaryText }}
+          />
+        </article>
 
-                <div
-                  className="mt-8 space-y-3 text-slate-800 max-h-[70vh] overflow-y-auto"
-                  dangerouslySetInnerHTML={{ __html: summaryText }}
-                />
-              </article>
-
-              <article
-                id="action-buttons"
-                className="w-[82%] mt-3 mx-3 flex gap-4 justify-center"
-              >
-                <button
-                  onClick={handleReset}
-                  className="bg-red-500 px-4 py-1 text-white rounded cursor-pointer"
-                >
-                  Reset
-                </button>
-                <button onClick={generateNotes} className="bg-linear-65 from-purple-500 to-pink-500 px-4 py-1 rounded text-white cursor-pointer">
-                  Generate notes
-                </button>
-              </article>
-            </section>
-          )}
-        </section>
-      </main>
+        <article
+          id="action-buttons"
+          className="w-full mt-3 flex flex-col md:flex-row gap-3 md:gap-4 justify-center items-stretch"
+        >
+          <button
+            onClick={handleReset}
+            className="bg-red-500 px-4 py-2 text-white rounded cursor-pointer w-full md:w-auto"
+          >
+            Reset
+          </button>
+          <button
+            onClick={generateNotes}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded text-white cursor-pointer w-full md:w-auto"
+          >
+            Generate notes
+          </button>
+        </article>
+      </section>
+    )}
+  </section>
+</main>
       <Footer />
       <ToastContainer />
     </div>

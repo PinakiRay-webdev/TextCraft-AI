@@ -3,7 +3,11 @@ import { VscEyeClosed, VscEye } from "react-icons/vsc";
 import { useForm } from "react-hook-form";
 import google from "../../assets/google.svg";
 import { useState } from "react";
-import { GoogleAuthProvider, signInWithPopup , createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { firebaseAuth } from "../../firebase/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -30,14 +34,17 @@ const Signup = () => {
     await signInWithPopup(firebaseAuth, provider)
       .then((result) => {
         const user = result.user;
-        localStorage.setItem('userCredentials' , JSON.stringify({
+        localStorage.setItem(
+          "userCredentials",
+          JSON.stringify({
             userEmail: user.email,
-            photoUrl: user.photoURL
-        }))
+            photoUrl: user.photoURL,
+          })
+        );
         toast.dismiss();
         toast.success("Authenticated✅", { theme: "dark" });
         setTimeout(() => {
-            navigate('/')
+          navigate("/");
         }, 1500);
       })
       .catch((error) => {
@@ -50,20 +57,25 @@ const Signup = () => {
   const signup = async (data) => {
     toast.loading("Registering your accound...", { theme: "dark" });
     try {
-        createUserWithEmailAndPassword(firebaseAuth , data.email , data.password).then((credentials) =>{
-            const user = credentials.user;
-            localStorage.setItem('userCredentials' , JSON.stringify({
-                userEmail: user.email,
-            }))
-            toast.dismiss();
-            toast.success('Account registered✅' , {theme: 'dark'})
-            setTimeout(() => {
-                navigate('/')
-            }, 1500);
-        }).catch((error) =>{
-            toast.dismiss();
-            toast.error(error.message , {theme : 'dark'})
+      createUserWithEmailAndPassword(firebaseAuth, data.email, data.password)
+        .then((credentials) => {
+          const user = credentials.user;
+          localStorage.setItem(
+            "userCredentials",
+            JSON.stringify({
+              userEmail: user.email,
+            })
+          );
+          toast.dismiss();
+          toast.success("Account registered✅", { theme: "dark" });
+          setTimeout(() => {
+            navigate("/");
+          }, 1500);
         })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.message, { theme: "dark" });
+        });
     } catch (error) {
       toast.dismiss();
       toast.error("failed to submit", { theme: "dark" });
@@ -81,20 +93,30 @@ const Signup = () => {
       </div>
       <div id="signin-form" className="flex-1 flex items-center">
         <article className="min-w-[25rem] w-[50%] mx-auto">
-          <header>
-            <p>Back to webpage</p>
+          <header className="cursor-pointer" onClick={() => navigate("/")}>
+            <p> 🏡 Back to webpage</p>
           </header>
-          <div className="mt-8">
-            <h2 className="text-5xl font-semibold">Hi, There</h2>
-            <p className="mt-2">
-              <span className="font-semibold underline cursor-pointer">
-                Create a free account
-              </span>{" "}
-              or login to get started with Textcraft
+          <div className="mt-8 mx-2">
+            <h2 className="text-4xl md:text-5xl font-bold">
+              Create Your Free Account
+            </h2>
+            <p className="mt-2 text-gray-700">
+              Join{" "}
+              <span className="font-semibold text-purple-700">TextCraft</span>{" "}
+              to unlock AI-powered summaries, notes, and quizzes.
+              <br />
+              Already have an account?{" "}
+              <span
+                className="font-semibold underline cursor-pointer text-purple-700"
+                onClick={() => navigate("/signin")}
+              >
+                Log in here
+              </span>
+              .
             </p>
           </div>
           {/* sign up form  */}
-          <form onSubmit={handleSubmit(signup)} className="mt-8">
+          <form onSubmit={handleSubmit(signup)} className="mt-8 mx-2">
             {/* first and last name  */}
             <div className="flex gap-2">
               <fieldset
@@ -108,7 +130,9 @@ const Signup = () => {
                   }`}
                 >
                   {" "}
-                  {errors.firstname ? errors.firstname.message : "First name"}{" "}
+                  {errors.firstname
+                    ? errors.firstname.message
+                    : "First name"}{" "}
                 </legend>
                 <input
                   {...register("firstname", {
@@ -213,7 +237,7 @@ const Signup = () => {
           {/* social media authentication  */}
           <div
             onClick={googleSignin}
-            className="ring-1 cursor-pointer ring-black flex items-center justify-center gap-3 py-2 rounded-lg mt-4"
+            className="ring-1 mx-2 cursor-pointer ring-black flex items-center justify-center gap-3 py-2 rounded-lg mt-4"
           >
             <img className="w-7" src={google} alt="" />
             <p className="text-lg font-semibold">continue with google</p>

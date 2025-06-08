@@ -79,13 +79,13 @@ const Signin = () => {
       </div>
       <div id="signin-form" className="flex-1 flex items-center">
         <article className="min-w-[25rem] w-[40%] mx-auto">
-          <header>
-            <p>Back to webpage</p>
+          <header onClick={()=> navigate('/')}>
+            <p>🏡 Back to webpage</p>
           </header>
           <div className="mt-8">
             <h2 className="text-5xl font-semibold">Welcome!!</h2>
             <p className="mt-2">
-              <span className="font-semibold underline cursor-pointer">
+              <span onClick={() => navigate('/signup')} className="font-semibold underline cursor-pointer">
                 Create a free account
               </span>{" "}
               or login to get started with Textcraft
