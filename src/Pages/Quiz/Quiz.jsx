@@ -4,14 +4,16 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Navbar from "../../Pages/Home/Components/Navbar/Navbar";
 import { WiStars } from "react-icons/wi";
-import quizBg from '../../assets/quizBg.png'
-import Footer from '../../components/Footer/Footer'
+import quizBg from '../../assets/quizBg.png';
+import Footer from '../../components/Footer/Footer';
 
 const Quiz = () => {
   const [quiz, setQuiz] = useState([]);
   const [userAnswers, setUserAnswers] = useState({});
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
+
+  const user = JSON.parse(localStorage.getItem('userCredentials'))
 
   const {
     register,
@@ -21,6 +23,10 @@ const Quiz = () => {
   } = useForm();
 
   const onGenerate = async (data) => {
+    if(!user){
+      toast.error('Create account first' , {theme : 'dark'})
+      return;
+    }
     const paragraph = data.paragraph.trim();
     if (!paragraph) {
       toast.error("Please enter a paragraph first!", { theme: "dark" });
@@ -34,7 +40,8 @@ const Quiz = () => {
       setQuiz(result);
       setUserAnswers({});
       setShowScore(false);
-      reset(); // Clear form
+      toast.success("Quiz generated successfully!", { theme: "dark" });
+      reset();
     } catch (error) {
       toast.dismiss();
       toast.error("Failed to generate quiz", { theme: "dark" });
@@ -52,6 +59,13 @@ const Quiz = () => {
     });
     setScore(correct);
     setShowScore(true);
+  };
+
+  const handleEndTest = () => {
+    setQuiz([]);
+    setUserAnswers({});
+    setScore(0);
+    setShowScore(false);
   };
 
   return (
@@ -73,7 +87,6 @@ const Quiz = () => {
         </button>
       </header>
 
-      
       <section className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 rounded-lg my-12 py-8 px-4 lg:py-12 lg:px-12 max-w-6xl mx-auto">
         <div className="w-full lg:w-2/3 text-center lg:text-left">
           <h4 className="text-2xl font-semibold capitalize mb-4">
@@ -131,54 +144,60 @@ const Quiz = () => {
         </form>
       </section>
 
-
       <section className="mb-12">
-              {quiz.map((q, index) => (
-        <div
-          key={index}
-          className="w-[60%] mx-auto my-6 p-4 border rounded bg-gray-50 shadow-sm"
-        >
-          <p className="font-medium mb-2">
-            {index + 1}. {q.question}
-          </p>
-          <div className="space-y-2">
-            {q.options.map((option, optIndex) => (
-              <label key={optIndex} className="block cursor-pointer">
-                <input
-                  type="radio"
-                  name={`q${index}`}
-                  value={option}
-                  checked={userAnswers[index] === option}
-                  onChange={() => handleSelect(index, option)}
-                  className="mr-2"
-                />
-                {option}
-              </label>
-            ))}
-          </div>
-        </div>
-      ))}
-
-            {quiz.length > 0 && !showScore && (
-        <div className="w-[60%] mx-auto">
-          <button
-            onClick={handleSubmitQuiz}
-            className="mt-4 px-6 py-2 bg-green-700 text-white rounded"
+        {quiz.map((q, index) => (
+          <div
+            key={index}
+            className="w-[60%] mx-auto my-6 p-4 border rounded bg-gray-50 shadow-sm"
           >
-            Submit Quiz
-          </button>
-        </div>
-      )}
+            <p className="font-medium mb-2">
+              {index + 1}. {q.question}
+            </p>
+            <div className="space-y-2">
+              {q.options.map((option, optIndex) => (
+                <label key={optIndex} className="block cursor-pointer">
+                  <input
+                    type="radio"
+                    name={`q${index}`}
+                    value={option}
+                    checked={userAnswers[index] === option}
+                    onChange={() => handleSelect(index, option)}
+                    className="mr-2"
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </div>
+        ))}
 
-      {showScore && (
-        <div className="w-[60%] mx-auto">
-          <p className="mt-6 text-xl font-bold text-green-700">
-            ✅ You scored {score} out of {quiz.length}
-          </p>
-        </div>
-      )}
+        {quiz.length > 0 && !showScore && (
+          <div className="w-[60%] mx-auto">
+            <button
+              onClick={handleSubmitQuiz}
+              className="mt-4 px-6 py-2 bg-green-700 text-white rounded"
+            >
+              Submit Quiz
+            </button>
+          </div>
+        )}
+
+        {showScore && (
+          <div className="w-[60%] mx-auto flex flex-col items-start gap-4">
+            <p className="mt-6 text-xl font-bold text-green-700">
+              ✅ You scored {score} out of {quiz.length}
+            </p>
+            <button
+              onClick={handleEndTest}
+              className="px-5 py-2 bg-red-600 text-white rounded font-semibold"
+            >
+              End Test
+            </button>
+          </div>
+        )}
       </section>
-      <Footer/>
+
+      <Footer />
     </div>
   );
 };
