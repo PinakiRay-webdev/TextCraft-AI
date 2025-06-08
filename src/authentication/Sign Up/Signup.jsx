@@ -3,8 +3,9 @@ import { VscEyeClosed, VscEye } from "react-icons/vsc";
 import { useForm } from "react-hook-form";
 import google from "../../assets/google.svg";
 import { useState } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup , createUserWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../firebase/firebaseConfig";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Signup = () => {
@@ -16,6 +17,7 @@ const Signup = () => {
   } = useForm();
 
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
   const togglePassView = () => {
     setIsVisible(!isVisible);
@@ -27,14 +29,16 @@ const Signup = () => {
     toast.loading("signing with google", { theme: "dark" });
     await signInWithPopup(firebaseAuth, provider)
       .then((result) => {
-        const credentials = GoogleAuthProvider.credentialFromResult(result);
         const user = result.user;
         localStorage.setItem('userCredentials' , JSON.stringify({
-            userName : user.displayName,
-            userEmail: user.email
+            userEmail: user.email,
+            photoUrl: user.photoURL
         }))
         toast.dismiss();
         toast.success("Authenticated✅", { theme: "dark" });
+        setTimeout(() => {
+            navigate('/')
+        }, 1500);
       })
       .catch((error) => {
         toast.dismiss();
@@ -44,17 +48,22 @@ const Signup = () => {
 
   //signup with email and password
   const signup = async (data) => {
-    toast.loading("singing you in a sec...", { theme: "dark" });
+    toast.loading("Registering your accound...", { theme: "dark" });
     try {
-      await new Promise((resolve) => {
-        setInterval(() => {
-          resolve();
-        }, 1500);
-      }).then(() => {
-        toast.dismiss();
-        toast.success("signin completed!!", { theme: "dark" });
-        reset();
-      });
+        createUserWithEmailAndPassword(firebaseAuth , data.email , data.password).then((credentials) =>{
+            const user = credentials.user;
+            localStorage.setItem('userCredentials' , JSON.stringify({
+                userEmail: user.email,
+            }))
+            toast.dismiss();
+            toast.success('Account registered✅' , {theme: 'dark'})
+            setTimeout(() => {
+                navigate('/')
+            }, 1500);
+        }).catch((error) =>{
+            toast.dismiss();
+            toast.error(error.message , {theme : 'dark'})
+        })
     } catch (error) {
       toast.dismiss();
       toast.error("failed to submit", { theme: "dark" });
