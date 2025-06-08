@@ -6,7 +6,7 @@ const Features = () => {
   const navigate = useNavigate()
 
   return (
-    <section className="mt-[12rem] w-[95%] max-w-7xl mx-auto">
+    <section id="tools" className="mt-[12rem] w-[95%] max-w-7xl mx-auto">
       <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold max-w-full sm:max-w-2xl md:max-w-3xl mx-auto">
         Boost your efficiency with cutting edge features
       </h2>
@@ -24,10 +24,6 @@ const Features = () => {
             <h3 className="text-white text-2xl font-semibold mt-3">
               {item.Data}
             </h3>
-            <p className="text-zinc-200 mt-3">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus
-              explicabo assumenda
-            </p>
             <button onClick={() => navigate(item.path)} className="bg-white rounded-3xl px-8 py-2 mt-8">
               {item.button}
             </button>

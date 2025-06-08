@@ -8,7 +8,7 @@ const Quiz = () => {
   const navigate = useNavigate()
 
   return (
-    <section className="my-20 w-[95%] max-w-6xl mx-auto px-4 py-8 flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-0">
+    <section id="features" className="my-20 w-[95%] max-w-6xl mx-auto px-4 py-8 flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-0">
       <article className="w-full lg:w-1/2">
         <span className="text-xs font-bold opacity-70">POWER OF AI</span>
         <h3 className="text-3xl sm:text-4xl font-semibold mt-3 w-full">

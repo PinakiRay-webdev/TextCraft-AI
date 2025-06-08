@@ -1,11 +1,11 @@
-import { HiOutlineSparkles } from "react-icons/hi";
+import { HiOutlineSparkles, HiMenu, HiX } from "react-icons/hi";
 import { navItems } from "../../../../../utils/utils";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { firebaseAuth } from "../../../../firebase/firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
-import { HiMenu, HiX } from "react-icons/hi";
+import { Link as ScrollLink } from "react-scroll";
 
 const Navbar = () => {
   const [userCrdentials, setUserCrdentials] = useState(() =>
@@ -37,38 +37,57 @@ const Navbar = () => {
       });
   };
 
-  const navigateToQuiz = (element) => {
-    if (element === "Quiz") {
+  const handleClick = (item) => {
+    if (item === "Quiz") {
       navigate("/quiz");
-      setMenuOpen(false);
     }
-  };
-
-  const handleNavClick = (path) => {
-    navigate(path);
     setMenuOpen(false);
   };
 
+const isScrollTarget = (item) => {
+  const scrollSections = ["Tools", "Features", "Pricing"];
+  return scrollSections.includes(item);
+};
+
   return (
-    <div>
+    <>
+      <ToastContainer />
       <nav className="px-4 sm:px-8 py-2 flex justify-between items-center bg-white relative z-20">
-        <h1 className="flex items-center text-2xl font-semibold gap-2 cursor-pointer" onClick={() => navigate("/")}>
+        <h1
+          className="flex items-center text-2xl font-semibold gap-2 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <HiOutlineSparkles />
           TextCraft
         </h1>
 
+        {/* Desktop Nav Items */}
         <div className="hidden md:flex gap-9">
-          {navItems.map((items, id) => (
-            <p
-              onClick={() => navigateToQuiz(items)}
-              key={id}
-              className="font-semibold cursor-pointer"
-            >
-              {items}
-            </p>
-          ))}
+          {navItems.map((item, id) =>
+            isScrollTarget(item) ? (
+              <ScrollLink
+                key={id}
+                to={item.toLowerCase()}
+                smooth={true}
+                offset={-80}
+                duration={500}
+                className="font-semibold cursor-pointer hover:text-pink-500 transition"
+              >
+                {item}
+              </ScrollLink>
+            ) : (
+              <p
+                key={id}
+                onClick={() => handleClick(item)}
+                className="font-semibold cursor-pointer hover:text-pink-500 transition"
+              >
+                {item}
+              </p>
+            )
+          )}
         </div>
 
+        {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-2">
           {!userCrdentials ? (
             <>
@@ -99,7 +118,9 @@ const Navbar = () => {
                 </p>
               )}
               <div>
-                <p className="text-sm font-semibold">{userCrdentials.userEmail}</p>
+                <p className="text-sm font-semibold">
+                  {userCrdentials.userEmail}
+                </p>
                 <p
                   onClick={signout}
                   className="text-sm font-semibold text-red-500 cursor-pointer"
@@ -111,96 +132,74 @@ const Navbar = () => {
           )}
         </div>
 
+        {/* Mobile Menu Icon */}
         <button
           className="md:hidden text-3xl focus:outline-none"
           onClick={() => setMenuOpen((prev) => !prev)}
-          aria-label="Toggle menu"
         >
           {menuOpen ? <HiX /> : <HiMenu />}
         </button>
-
-        {menuOpen && (
-          <div className="fixed inset-0 bg-black/60 z-30 flex">
-            <div className="bg-white w-4/5 max-w-xs h-full shadow-lg flex flex-col p-6 gap-6 animate-slide-in relative">
-              <div className="flex justify-between items-center mb-4">
-                <span className="flex items-center text-xl font-semibold gap-2">
-                  <HiOutlineSparkles />
-                  TextCraft
-                </span>
-                <button
-                  className="text-2xl"
-                  onClick={() => setMenuOpen(false)}
-                  aria-label="Close menu"
-                >
-                  <HiX />
-                </button>
-              </div>
-              <div className="flex flex-col gap-4 flex-1">
-                {navItems.map((items, id) => (
-                  <p
-                    onClick={() => navigateToQuiz(items)}
-                    key={id}
-                    className="font-semibold cursor-pointer py-2"
-                  >
-                    {items}
-                  </p>
-                ))}
-              </div>
-              <div className="flex flex-col gap-3 mt-4 absolute bottom-6 left-0 w-full px-6">
-                {!userCrdentials ? (
-                  <>
-                    <button
-                      onClick={() => handleNavClick("/signin")}
-                      className="border-2 border-pink-400 px-6 py-1 rounded"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={() => handleNavClick("/signup")}
-                      className="border-2 border-pink-400 rounded bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-1 text-white cursor-pointer font-semibold"
-                    >
-                      Get started
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex gap-2 items-center">
-                    {userCrdentials.photoUrl ? (
-                      <img
-                        className="h-10 w-10 rounded-full object-cover"
-                        src={userCrdentials.photoUrl}
-                        alt="profile"
-                      />
-                    ) : (
-                      <p className="bg-purple-700 py-2 w-10 text-center rounded-full text-white">
-                        {`${userCrdentials.userEmail}`.split("")[0].toUpperCase()}
-                      </p>
-                    )}
-                    <div>
-                      <p className="text-sm font-semibold">{userCrdentials.userEmail}</p>
-                      <p
-                        onClick={() => {
-                          signout();
-                          setMenuOpen(false);
-                        }}
-                        className="text-sm font-semibold text-red-500 cursor-pointer"
-                      >
-                        Sign out
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div
-              className="flex-1"
-              onClick={() => setMenuOpen(false)}
-              aria-label="Close menu overlay"
-            />
-          </div>
-        )}
       </nav>
-      <ToastContainer />
-    </div>
+
+      {/* Mobile Dropdown */}
+      {menuOpen && (
+        <div className="md:hidden flex flex-col bg-white px-6 py-4 gap-3 shadow z-10">
+          {navItems.map((item, id) =>
+            isScrollTarget(item) ? (
+              <ScrollLink
+                key={id}
+                to={item.toLowerCase()}
+                smooth={true}
+                offset={-80}
+                duration={500}
+                onClick={() => setMenuOpen(false)}
+                className="font-semibold cursor-pointer"
+              >
+                {item}
+              </ScrollLink>
+            ) : (
+              <p
+                key={id}
+                onClick={() => handleClick(item)}
+                className="font-semibold cursor-pointer"
+              >
+                {item}
+              </p>
+            )
+          )}
+
+          {!userCrdentials ? (
+            <>
+              <button
+                onClick={() => {
+                  navigate("/signin");
+                  setMenuOpen(false);
+                }}
+                className="border border-pink-400 px-4 py-1 rounded"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/signup");
+                  setMenuOpen(false);
+                }}
+                className="border border-pink-400 bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-1 text-white font-semibold rounded"
+              >
+                Get started
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={signout}
+              className="text-red-500 font-semibold"
+            >
+              Sign out
+            </button>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

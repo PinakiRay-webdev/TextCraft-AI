@@ -1,4 +1,4 @@
-export const navItems = ["Features", "Tools", "Pricing" , "Quiz"];
+export const navItems = ["Tools", "Features", "Quiz"];
 
 export const featureItems = [
   {
