@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Summary from "./Pages/Summary/Summary";
 import Signin from "./authentication/Sign in/Signin";
 import Signup from "./authentication/Sign Up/SignUp";
+import Quiz from "./Pages/Quiz/Quiz";
 const App = () => {
   const myRouters = createBrowserRouter([
     {
@@ -29,6 +30,15 @@ const App = () => {
         <>
           {" "}
           <Summary />{" "}
+        </>
+      ),
+    },
+        {
+      path: "/quiz",
+      element: (
+        <>
+          {" "}
+          <Quiz />
         </>
       ),
     },

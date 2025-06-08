@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from './Components/Navbar/Navbar'
 import Banner from './Components/Banner/Banner'
 import Features from './Components/Features/Features'
-import Quiz from './Components/Quiz/Quiz'
+import NotesFeatures from './Components/NotesFeature/NotesFeatures'
 import Reason from './Components/Reason/Reason'
 import CTA from './Components/CTA/CTA'
 
@@ -12,7 +12,7 @@ const Home = () => {
       <Navbar/>
       <Banner/>
       <Features/>
-      <Quiz/>
+      <NotesFeatures/>
       <Reason/>
       <CTA/>
     </div>

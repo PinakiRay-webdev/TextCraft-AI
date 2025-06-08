@@ -1,44 +1,59 @@
-export const navItems = ["Features", "Tools", "Pricing"];
+export const navItems = ["Features", "Tools", "Pricing" , "Quiz"];
 
 export const featureItems = [
   {
     id: 1,
-    header: "Try if free!",
-    Data: "Try clarity in your browser",
+    header: "AI Summary",
+    Data: "Turn long paragraphs into concise summaries instantly.",
     gradientClass: "from-blue-500 to-purple-500",
-    button: "Start a project",
+    button: "Summarize Now",
+    path: '/summary'
   },
   {
     id: 2,
-    header: "Get started",
-    Data: "Explore clarity templates",
+    header: "Smart Notes",
+    Data: "Generate clear, organized notes from any content.",
     gradientClass: "from-sky-600 to-emerald-500",
-    button: "Explore Templates",
+    button: "Create Notes",
+    path: '/summary'
   },
   {
     id: 3,
-    header: "Documentation",
-    Data: "Learn more in our docs",
+    header: "Quiz Generator",
+    Data: "Create engaging quizzes from your text for active learning.",
     gradientClass: "from-red-500 to-pink-500",
-    button: "Start Learning",
+    button: "Generate Quiz",
+    path: '/quiz'
   },
+];
+
+export const notesFeatures = [
+  "Instant Notes",
+  "Smart Summary",
+  "Key Points",
+  "Structured",
+  "Download as PDF",
 ];
 
 export const reasons = [
   {
-    id: 1,
-    text: "Collaboration in real time",
+    text: "Summarize Instantly",
+    desc: "Get concise summaries in seconds."
   },
   {
-    id: 2,
-    text: "Share in space",
+    text: "Smart Note-Making",
+    desc: "Auto-generate organized notes."
   },
   {
-    id: 3,
-    text: "Find your perfect design",
+    text: "Quiz Generation",
+    desc: "Create quizzes from your content."
   },
   {
-    id: 4,
-    text: "Interact",
+    text: "Boost Productivity",
+    desc: "Save time with AI-powered tools."
   },
+  {
+    text: "All-in-One Solution",
+    desc: "Summaries, notes, and quizzes—together."
+  }
 ];
