@@ -1,8 +1,8 @@
 import { HiOutlineSparkles, HiMenu, HiX } from "react-icons/hi";
-import { navItems } from "../../../../../utils/utils";
+import { navItems } from "../../../utils/utils";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { firebaseAuth } from "../../../../firebase/firebaseConfig";
+import { firebaseAuth } from "../../firebase/firebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import { Link as ScrollLink } from "react-scroll";

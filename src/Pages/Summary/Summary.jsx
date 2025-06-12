@@ -2,7 +2,7 @@ import { useState } from "react";
 import { IoCopy } from "react-icons/io5";
 import { RxDownload } from "react-icons/rx";
 import Footer from "../../components/Footer/Footer";
-import Navbar from "../Home/Components/Navbar/Navbar";
+import Navbar from "../../components/Navbar/Navbar";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from './Components/Navbar/Navbar'
+import Navbar from '../../components/Navbar/Navbar'
 import Banner from './Components/Banner/Banner'
 import Tools from './Components/Tools/Tools'
 import NotesFeatures from './Components/NotesFeature/NotesFeatures'

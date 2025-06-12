@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { generateQuiz } from "../../functions/Quiz";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Navbar from "../../Pages/Home/Components/Navbar/Navbar";
+import Navbar from "../../components/Navbar/Navbar";
 import { WiStars } from "react-icons/wi";
 import quizBg from '../../assets/quizBg.png';
 import Footer from '../../components/Footer/Footer';
